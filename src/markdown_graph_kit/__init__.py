@@ -42,9 +42,9 @@ def assets_dir(graph_root: Path) -> Path:
     return Path(graph_root) / "assets"
 
 
-def trash_dir(graph_root: Path) -> Path:
+def recycle_dir(graph_root: Path) -> Path:
     """Return the trash directory for a graph (soft-delete recovery)."""
-    return Path(graph_root) / ".trash"
+    return Path(graph_root) / ".recycle"
 
 
 def logseq_dir(graph_root: Path) -> Path:
@@ -153,13 +153,13 @@ def _backup_timestamp() -> str:
 
 
 def backup_page_file(page_file: Path, graph_root: Path) -> Path:
-    """Copy page_file's current content into .trash/<timestamp>-<filename>.
+    """Copy page_file's current content into .recycle/<timestamp>-<filename>.
 
     The original file is left in place. Returns the backup path.
-    .trash/ is a dotdir, so it's already excluded from every read/search tool's
+    .recycle/ is a dotdir, so it's already excluded from every read/search tool's
     rglob (they all skip any path component starting with '.').
     """
-    trash = trash_dir(graph_root)
+    trash = recycle_dir(graph_root)
     trash.mkdir(parents=True, exist_ok=True)
     backup_path = trash / f"{_backup_timestamp()}-{page_file.name}"
     backup_path.write_bytes(page_file.read_bytes())
@@ -167,12 +167,12 @@ def backup_page_file(page_file: Path, graph_root: Path) -> Path:
 
 
 def delete_page_file(page_file: Path, graph_root: Path) -> Path:
-    """Soft-delete: move page_file into .trash/<timestamp>-<filename>.
+    """Soft-delete: move page_file into .recycle/<timestamp>-<filename>.
 
-    Never a hard delete — the file is fully recoverable from .trash/.
+    Never a hard delete — the file is fully recoverable from .recycle/.
     Returns the trash path.
     """
-    trash = trash_dir(graph_root)
+    trash = recycle_dir(graph_root)
     trash.mkdir(parents=True, exist_ok=True)
     trash_path = trash / f"{_backup_timestamp()}-{page_file.name}"
     page_file.rename(trash_path)
@@ -268,7 +268,7 @@ __all__ = [
     "pages_dir",
     "journals_dir",
     "assets_dir",
-    "trash_dir",
+    "recycle_dir",
     "logseq_dir",
     "page_path",
     "journal_filename",

@@ -49,9 +49,9 @@ class TestDirectoryPaths:
         root = Path("/tmp/test_graph")
         assert mgk.assets_dir(root) == root / "assets"
 
-    def test_trash_dir(self):
+    def test_recycle_dir(self):
         root = Path("/tmp/test_graph")
-        assert mgk.trash_dir(root) == root / ".trash"
+        assert mgk.recycle_dir(root) == root / ".recycle"
 
     def test_logseq_dir(self):
         root = Path("/tmp/test_graph")
@@ -268,7 +268,7 @@ class TestSoftDelete:
     """Test page backup and soft-delete."""
 
     def test_backup_page_file(self):
-        """Backing up a page creates a copy in .trash/."""
+        """Backing up a page creates a copy in .recycle/."""
         with tempfile.TemporaryDirectory() as tmpdir:
             graph_root = Path(tmpdir)
             mgk.bootstrap_graph(graph_root)
@@ -284,13 +284,13 @@ class TestSoftDelete:
             assert page.exists()
             assert page.read_text() == "Original content"
 
-            # Backup exists in .trash/
+            # Backup exists in .recycle/
             assert backup_path.exists()
             assert backup_path.read_text() == "Original content"
-            assert backup_path.parent == mgk.trash_dir(graph_root)
+            assert backup_path.parent == mgk.recycle_dir(graph_root)
 
     def test_delete_page_file_soft_delete(self):
-        """Soft-deleting moves the file to .trash/ instead of hard-deleting."""
+        """Soft-deleting moves the file to .recycle/ instead of hard-deleting."""
         with tempfile.TemporaryDirectory() as tmpdir:
             graph_root = Path(tmpdir)
             mgk.bootstrap_graph(graph_root)
@@ -303,7 +303,7 @@ class TestSoftDelete:
             # Original is gone from pages/
             assert not page.exists()
 
-            # But it's recoverable from .trash/
+            # But it's recoverable from .recycle/
             assert trash_path.exists()
             assert trash_path.read_text() == "Content to delete"
-            assert trash_path.parent == mgk.trash_dir(graph_root)
+            assert trash_path.parent == mgk.recycle_dir(graph_root)
