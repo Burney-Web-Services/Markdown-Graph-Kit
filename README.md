@@ -2,7 +2,7 @@
 
 Zero-dependency primitives for Logseq-style markdown knowledge graphs.
 
-**Status**: Alpha. Extracted from [markdown-graph-mcp](https://github.com/pburney/markdown-graph-mcp) and expanded to support graph bootstrapping.
+Extracted from [markdown-graph-mcp](https://github.com/pburney/markdown-graph-mcp) and expanded to support graph bootstrapping.
 
 ## What's included
 
